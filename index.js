@@ -1,4 +1,5 @@
 import express from "express";
+import fs from "fs";
 import mongoose from "mongoose";
 import multer from "multer";
 import cors from "cors";
@@ -20,7 +21,12 @@ const app = express();
 app.use("/uploads", express.static("uploads"));
 
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, "uploads/"),
+  destination: (req, file, cb) => {
+	 if (!fs.existsSync("uploads")) {
+		 fs.mkdirSync("uploads");
+	 }
+	cb(null, "uploads/"),
+  },
   filename: (req, file, cb) => cb(null, file.originalname),
 });
 const upload = multer({ storage: storage });
@@ -73,5 +79,5 @@ app.listen(process.env.PORT || 4444, (err) => {
   if (err) {
     return console.log("error bad", err);
   }
-  console.log("app OK, listening on port 4444!");
+  console.log("app OK");
 });
