@@ -33,21 +33,17 @@ export const getOne = async (req, res) => {
   try {
     const postId = req.params.id;
 
-    const post = await Postmodel.findById(postId, { $inc: { viewsCount: 1 } })
-      .populate("user")
-      .exec();
-    if (!post) {
-      return res.status(404).json({
-        message: "Статья не найдена",
-      });
+    const doc = await PostModel.findOneAndUpdate(
+      { _id: postId },
+      { $inc: { viewsCount: 1 } },
+      { new: true }
+    );
+
+    if (!doc) {
+      return res.status(404).json({ message: "Статья не найдена" });
     }
-    res.json({
-      title: post.title,
-      text: post.text,
-      tags: post.tags,
-      imageUrl: post.imageUrl,
-      user: post.user,
-    });
+
+    res.json(doc);
   } catch (err) {
     console.log(err);
     res.status(500).json({
