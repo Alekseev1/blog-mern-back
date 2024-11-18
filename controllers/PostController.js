@@ -33,7 +33,9 @@ export const getOne = async (req, res) => {
   try {
     const postId = req.params.id;
 
-    const post = await Postmodel.findById(postId).populate("user").exec();
+    const post = await Postmodel.findById(postId, { $inc: { viewsCount: 1 } })
+      .populate("user")
+      .exec();
     if (!post) {
       return res.status(404).json({
         message: "Статья не найдена",
