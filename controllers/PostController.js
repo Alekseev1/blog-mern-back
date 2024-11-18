@@ -33,7 +33,7 @@ export const getOne = async (req, res) => {
   try {
     const postId = req.params.id;
 
-    const doc = await PostModel.findOneAndUpdate(
+    const doc = await Postmodel.findOneAndUpdate(
       { _id: postId },
       { $inc: { viewsCount: 1 } },
       { new: true }
